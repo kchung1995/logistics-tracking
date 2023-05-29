@@ -15,7 +15,7 @@ fun Route.logisticsRouting() {
                 "송장번호를 입력해 주세요.",
                 status = HttpStatusCode.BadRequest
             )
-            val tracking = trackerDeliveryClient()
+            val tracking = LogisticsRoutingResponse.from(trackerDeliveryClient())
 
             call.respond(tracking)
         }
