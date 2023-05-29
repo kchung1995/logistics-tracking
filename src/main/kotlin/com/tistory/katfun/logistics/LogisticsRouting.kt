@@ -10,12 +10,16 @@ import io.ktor.server.routing.route
 
 fun Route.logisticsRouting() {
     route("/api/v1/logistics") {
-        get("/tracking/{number?}") {
-            val invoiceNumber = call.parameters["number"] ?: return@get call.respondText(
+        get("/tracking") {
+            val carrier = call.request.queryParameters["carrier"] ?: return@get call.respondText(
+                "택배사를 입력해 주세요.",
+                status = HttpStatusCode.BadRequest
+            )
+            val invoiceNumber = call.request.queryParameters["number"] ?: return@get call.respondText(
                 "송장번호를 입력해 주세요.",
                 status = HttpStatusCode.BadRequest
             )
-            val tracking = LogisticsRoutingResponse.from(trackerDeliveryClient())
+            val tracking = LogisticsRoutingResponse.from(trackerDeliveryClient(carrier, invoiceNumber))
 
             call.respond(tracking)
         }
